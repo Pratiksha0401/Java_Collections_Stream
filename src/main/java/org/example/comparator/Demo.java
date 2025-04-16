@@ -33,6 +33,22 @@ class Student {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 
 // Class representing an Employee
@@ -109,11 +125,57 @@ public class Demo {
         studentList.add(new Student(101, "Zara"));
         studentList.add(new Student(105, "Amit"));
         studentList.add(new Student(103, "John"));
-        studentList.add(new Student(102, "Priya"));
+        studentList.add(new Student(103, "Priya"));
 
         // Sort students using a custom Comparator by name
         Collections.sort(studentList, new StudentNameComparator());
         System.out.println("\nSorted Students by Name using Comparator:");
         System.out.println(studentList);
+
+        /**
+         * Comparator using method references and Comparator chaining.
+         *
+         * - First sorts students by `id` in descending order (`reversed()`).
+         * - Then, if two students have the same `id`, sorts by `name` in ascending order.
+         *
+         * This is a concise and reusable way to define multi-level sorting.
+         */
+        Comparator<Student> comparator = Comparator
+                .comparing(Student::getId)     // Sort by ID
+                .reversed()                    // in descending order
+                .thenComparing(Student::getName); // then by name (ascending)
+
+        // Sorting the list using the comparator
+        studentList.sort(comparator);
+
+        // Displaying the sorted list
+        System.out.println("Sorted using Comparator chain (id DESC, name ASC):");
+        System.out.println(studentList);
+
+        /**
+         * Manual comparator using lambda expression and if-else logic.
+         *
+         * Equivalent to the above Comparator but written using explicit comparison:
+         * - Sorts by ID in descending order.
+         * - If IDs are equal, compares names in ascending alphabetical order.
+         *
+         * This form provides clear control flow and is easy to debug or extend.
+         */
+        studentList.sort((s1, s2) -> {
+            // Compare by ID in descending order
+            if (s1.id > s2.id) {
+                return -1; // s1 should come before s2
+            } else if (s1.id < s2.id) {
+                return 1;  // s1 should come after s2
+            } else {
+                // If IDs are equal, compare by name in ascending order
+                return s1.name.compareTo(s2.name);
+            }
+        });
+
+        // Displaying the sorted list again (should be same result)
+        System.out.println("\nSorted using Lambda with if-else (id DESC, name ASC):");
+        System.out.println(studentList);
+
     }
 }
