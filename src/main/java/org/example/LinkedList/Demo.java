@@ -10,36 +10,42 @@ public class Demo {
         LinkedList<Integer> list = new LinkedList<>(); // Time: O(1)
 
         // Add elements to the end of the list
-        list.add(1); // O(1)
-        list.add(2); // O(1)
-        list.add(3); // O(1)
+        list.add(1); // Adds 1 to the end → [1], Time: O(1)
+        list.add(2); // Adds 2 to the end → [1, 2], Time: O(1)
+        list.add(3); // Adds 3 to the end → [1, 2, 3], Time: O(1)
 
-        // Get element at index 1
-        // Note: LinkedList access by index is O(n), so this is O(n) here
+        // Access element at index 1
+        // Since LinkedList doesn't support random access, this is O(n)
         System.out.println(list.get(1)); // Output: 2, Time: O(n)
 
-        // Add an element at the beginning
-        list.addFirst(0); // Output: [0, 1, 2, 3], Time: O(1)
+        // Add an element at the beginning of the list
+        list.addFirst(0); // List becomes → [0, 1, 2, 3], Time: O(1)
 
-        // Add an element at the end
-        list.addLast(4); // Output: [0, 1, 2, 3, 4], Time: O(1)
+        // Add an element at the end of the list
+        list.addLast(4); // List becomes → [0, 1, 2, 3, 4], Time: O(1)
 
-        // Print the full list
+        // Print current state of list
         System.out.println(list); // Output: [0, 1, 2, 3, 4]
 
+        // Remove element at index 3 (value = 3)
+        list.remove(3); // Removes the 4th element (index 3) → [0, 1, 2, 4], Time: O(n)
+
+        // Print updated list
+        System.out.println(list); // Output: [0, 1, 2, 4]
+
         /**
-         * Remove elements that match a condition.
-         * In this case: remove all even numbers.
-         * The removeIf internally iterates through the list and removes matching elements.
+         * Remove all even elements from the list.
+         * This loops through the list and removes items satisfying the condition.
          */
-        list.removeIf(x -> x % 2 == 0); // Removes 0, 2, 4 → Output: [1, 3]
+        list.removeIf(x -> x % 2 == 0); // Removes 0, 2, 4 → Remaining: [1]
         // Time Complexity: O(n)
 
-        System.out.println(list); // Output: [1, 3]
+        // Print final integer list
+        System.out.println(list); // Output: [1]
 
         /**
-         * Create LinkedList from Array using Arrays.asList()
-         * Note: Arrays.asList returns a fixed-size list, but we wrap it with new LinkedList to make it mutable
+         * Create LinkedList of strings from an array.
+         * Arrays.asList returns a fixed-size list, which is copied into a new LinkedList to allow modification.
          */
         LinkedList<String> stringLinkedList = new LinkedList<>(
                 Arrays.asList("Apple", "Banana", "Grapes")
@@ -50,13 +56,20 @@ public class Demo {
         ); // Time: O(n)
 
         /**
-         * Remove all elements from stringLinkedList that are present in linkedList
-         * This performs a contains check for each element in linkedList.
-         * Time Complexity: O(m * n), where m = size of linkedList, n = size of stringLinkedList
+         * Remove all elements from stringLinkedList that are present in linkedList.
+         * Performs contains check for each element in the parameter list.
+         * For each element in linkedList (m), checks in stringLinkedList (n) → O(m * n)
          */
         stringLinkedList.removeAll(linkedList); // Removes "Apple"
-        // After removal → Output: [Banana, Grapes]
+        // Result: [Banana, Grapes]
 
+        // Print updated string list
         System.out.println(stringLinkedList); // Output: [Banana, Grapes]
+
+        // Remove a specific element by value
+        stringLinkedList.remove("Grapes"); // Removes "Grapes" → [Banana], Time: O(n)
+
+        // Print final state of string list
+        System.out.println(stringLinkedList); // Output: [Banana]
     }
 }
