@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
@@ -12,14 +12,153 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Define JUnit 5 version -->
+    <junit.jupiter.version>5.10.0</junit.jupiter.version>
+    <!-- Define Surefire version compatible with JUnit 5 -->
+    <maven.surefire.version>3.1.2</maven.surefire.version>
+    <!-- Define JaCoCo version -->
+    <jacoco.version>0.8.11</jacoco.version> <!-- Added JaCoCo version -->
+    <!-- Define Java version -->
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
   </properties>
 
   <dependencies>
+    <!-- JUnit 5 Jupiter API -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- JUnit 5 Jupiter Engine (for running tests) -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- (Optional) JUnit Vintage Engine (to run JUnit 3/4 tests with JUnit 5 runner) -->
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Compiler Plugin to set Java version -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <!-- Surefire plugin for *running* tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.version}</version>
+        <!-- Configuration might be needed if JaCoCo agent property isn't picked up automatically -->
+        <!-- <configuration> -->
+        <!-- <argLine>@{argLine}</argLine> --> <!-- Usually not needed with modern versions -->
+        <!-- </configuration> -->
+      </plugin>
+      <!-- Site Plugin Configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.12.1</version>
+      </plugin>
+
+      <!-- START: Added JaCoCo Plugin Configuration -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal> <!-- Prepares the agent before tests run -->
+            </goals>
+          </execution>
+          <!-- Attaches the report goal to the test phase -->
+          <execution>
+            <id>report</id>
+            <phase>test</phase> <!-- Run after tests within the test phase -->
+            <goals>
+              <goal>report</goal> <!-- Generates the report -->
+            </goals>
+          </execution>
+          <!-- Optional: Add check goal to enforce coverage rules -->
+          <!--
+          <execution>
+              <id>jacoco-check</id>
+              <goals>
+                  <goal>check</goal>
+              </goals>
+              <configuration>
+                  <rules>
+                      <rule>
+                          <element>PACKAGE</element>
+                          <limits>
+                              <limit>
+                                  <counter>LINE</counter>
+                                  <value>COVEREDRATIO</value>
+                                  <minimum>0.50</minimum> // Example: 50% line coverage
+                              </limit>
+                          </limits>
+                      </rule>
+                  </rules>
+              </configuration>
+          </execution>
+          -->
+        </executions>
+      </plugin>
+      <!-- END: Added JaCoCo Plugin Configuration -->
+
+    </plugins>
+  </build>
+
+  <!-- Reporting section -->
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>${maven.surefire.version}</version>
+      </plugin>
+
+      <!-- START: Added JaCoCo to Reporting -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <!-- select non-aggregate reports -->
+              <report>report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <!-- END: Added JaCoCo to Reporting -->
+
+    </plugins>
+  </reporting>
 </project>
